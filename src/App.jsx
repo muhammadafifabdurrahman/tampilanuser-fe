@@ -19,6 +19,7 @@ import DashboardKasir from "./pages/kasir";
 import KasirOrders from "./pages/kasir/orders";
 import KasirPayments from "./pages/kasir/payments";
 import KasirEdit from "./pages/kasir/orders/edit";
+import PaymentCreate from "./pages/admin/payments/create";
 
 function App() {
   return (
@@ -49,6 +50,7 @@ function App() {
             </Route>
             <Route path="payments">
               <Route index element={<KasirPayments />} />
+              <Route path="create" element={<PaymentCreate /> } />
             </Route>
           </Route>
 
@@ -73,6 +75,7 @@ function App() {
             </Route>
             <Route path="payments">
               <Route index element={<AdminPayments />} />
+              <Route path="create" element={<PaymentCreate /> } />
             </Route>
           </Route>
         </Routes>

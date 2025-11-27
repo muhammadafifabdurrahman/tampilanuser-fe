@@ -11,11 +11,7 @@ export const getOrders = async () => {
 
 export const createOrders = async (data) => {
   try {
-    const response = await API.post("/orders", data, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-    });
+    const response = await API.post("/orders", data);
     return response.data;
   } catch (error) {
     console.log(error);

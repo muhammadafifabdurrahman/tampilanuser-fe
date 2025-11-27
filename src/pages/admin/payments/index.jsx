@@ -39,8 +39,9 @@ export default function AdminPayments() {
     <>
       <section className="p-3 bg-gray-50 dark:bg-gray-900 sm:p-5">
         <div className="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
-          {/* Search Header */}
+          {/* Search Header + Create Button */}
           <div className="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
+            {/* Search Input */}
             <div className="w-full md:w-1/2">
               <form className="flex items-center">
                 <label htmlFor="simple-search" className="sr-only">
@@ -60,6 +61,16 @@ export default function AdminPayments() {
                   />
                 </div>
               </form>
+            </div>
+
+            {/* Create Button */}
+            <div className="w-full md:w-auto">
+              <Link
+                to="/admin/payments/create" // pastikan route create sudah ada
+                className="inline-flex items-center px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
+              >
+                + Create Payment
+              </Link>
             </div>
           </div>
 
