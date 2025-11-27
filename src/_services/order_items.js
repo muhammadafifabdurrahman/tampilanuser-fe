@@ -1,7 +1,7 @@
 import { API } from "../_api/index";
 
-export const getOrders = async () => {
-  const { data } = await API.get("/orders", {
+export const getOrdersItems = async () => {
+  const { data } = await API.get("/order_items", {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
     },
@@ -9,9 +9,9 @@ export const getOrders = async () => {
   return data.data;
 };
 
-export const createOrders = async (data) => {
+export const create_itemsItems = async (data) => {
   try {
-    const response = await API.post("/orders", data, {
+    const response = await API.post("/order_items", data, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
@@ -23,13 +23,9 @@ export const createOrders = async (data) => {
   }
 };
 
-export const showOrders = async (id) => {
+export const showOrdersItems = async (id) => {
   try {
-    const { data } = await API.get(`/orders/${id}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-    });
+    const { data } = await API.get(`/order_items/${id}`);
     return data.data;
   } catch (error) {
     console.log(error);
@@ -37,11 +33,11 @@ export const showOrders = async (id) => {
   }
 };
 
-export const updateOrders = async (id, data) => {
+export const updateOrdersItems = async (id, data) => {
   try {
-    const response = await API.put(`/orders/${id}?_method=PUT`, data, {
+    const response = await API.put(`/order_items/${id}?_method=PUT`, data, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        "Content-Type": "multipart/form-data",
       },
     });
     return response.data;
@@ -51,9 +47,9 @@ export const updateOrders = async (id, data) => {
   }
 };
 
-export const deleteOrders = async (id) => {
+export const deleteOrdersItems = async (id) => {
   try {
-    await API.delete(`/orders/${id}`);
+    await API.delete(`/order_items/${id}`);
   } catch (error) {
     console.log(error);
     throw error;

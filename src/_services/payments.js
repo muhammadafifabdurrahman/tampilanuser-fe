@@ -1,7 +1,7 @@
 import { API } from "../_api/index";
 
-export const getOrders = async () => {
-  const { data } = await API.get("/orders", {
+export const getPayments = async () => {
+  const { data } = await API.get("/payments", {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
     },
@@ -9,9 +9,9 @@ export const getOrders = async () => {
   return data.data;
 };
 
-export const createOrders = async (data) => {
+export const createPayments = async (data) => {
   try {
-    const response = await API.post("/orders", data, {
+    const response = await API.post("/payments", data, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
@@ -23,13 +23,9 @@ export const createOrders = async (data) => {
   }
 };
 
-export const showOrders = async (id) => {
+export const showPayments = async (id) => {
   try {
-    const { data } = await API.get(`/orders/${id}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-    });
+    const { data } = await API.get(`/payments/${id}`);
     return data.data;
   } catch (error) {
     console.log(error);
@@ -37,11 +33,11 @@ export const showOrders = async (id) => {
   }
 };
 
-export const updateOrders = async (id, data) => {
+export const updatePayments = async (id, data) => {
   try {
-    const response = await API.put(`/orders/${id}?_method=PUT`, data, {
+    const response = await API.put(`/payments/${id}?_method=PUT`, data, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        "Content-Type": "multipart/form-data",
       },
     });
     return response.data;
@@ -51,9 +47,9 @@ export const updateOrders = async (id, data) => {
   }
 };
 
-export const deleteOrders = async (id) => {
+export const deletePayments = async (id) => {
   try {
-    await API.delete(`/orders/${id}`);
+    await API.delete(`/payments/${id}`);
   } catch (error) {
     console.log(error);
     throw error;
