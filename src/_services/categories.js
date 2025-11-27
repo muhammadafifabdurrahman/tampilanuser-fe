@@ -1,49 +1,57 @@
-import { API } from "../_api/index"
+import { API } from "../_api/index";
 
 export const getCategories = async () => {
-      const {data} = await API.get("/categories");
-      return data.data
-}
+  const { data } = await API.get("/categories");
+  return data.data;
+};
 
 export const createCategories = async (data) => {
-      try {
-            const response = await API.post("/categories", data)
-            return response.data
-      } catch (error){
-            console.log(error);
-            throw error
-      }
-}
+  try {
+    const response = await API.post("/categories", data, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
 
 export const showCategories = async (id) => {
-      try {
-            const { data } = await API.get(`/categories/${id}`)
-            return data.data
-      } catch (error) {
-            console.log(error)
-            throw error
-      }
-}
+  try {
+    const { data } = await API.get(`/categories/${id}`);
+    return data.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
 
 export const updateCategories = async (id, data) => {
-      try {
-            const response = await API.put(`/categories/${id}?_method=PUT`, data, {
+  try {
+    const response = await API.put(`/categories/${id}?_method=PUT`, data, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
-    })
-    return response.data
-      } catch (error){
-            console.log(error)
-            throw error
-      }
-}     
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
 
 export const deleteCategories = async (id) => {
-      try {
-            await API.delete(`/categories/${id}`)
-      } catch(error){
-            console.log(error)
-            throw error
-      }
-}
+  try {
+    await API.delete(`/categories/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};

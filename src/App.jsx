@@ -21,6 +21,7 @@ import KasirPayments from "./pages/kasir/payments";
 import KasirEdit from "./pages/kasir/orders/edit";
 import PaymentCreate from "./pages/admin/payments/create";
 import KasirAdd from "./pages/admin/users/create";
+import MenusCreate from "./pages/admin/menus/create";
 
 function App() {
   return (
@@ -68,6 +69,7 @@ function App() {
             </Route>
             <Route path="menus">
               <Route index element={<AdminMenus />} />
+              <Route path='create' element={<MenusCreate />}/>
             </Route>
             <Route path="orders">
               <Route index element={<AdminOrders />} />

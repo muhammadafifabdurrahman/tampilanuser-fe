@@ -2,18 +2,21 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getPayments } from "../../../_services/payments";
 import { getOrders } from "../../../_services/orders";
+import { getUsers } from "../../../_services/users";
 
-export default function KasirPayments() {
+export default function AdminPayments() {
   const [payments, setPayments] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [users, setUsers] = useState([]);
 
   const [openDropdownId, setOpenDropdownId] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const [paymentsData, ordersData] = await Promise.all([getPayments(), getOrders()]);
+      const [paymentsData, ordersData, usersData] = await Promise.all([getPayments(), getOrders(), getUsers()]);
       setPayments(paymentsData);
       setOrders(ordersData);
+      setUsers(usersData);
     };
     fetchData();
   }, []);
@@ -21,6 +24,11 @@ export default function KasirPayments() {
   const getOrdersId = (id) => {
     const order = orders.find((order) => order.id === id);
     return order ? order.order_number : "Unknown Order";
+  };
+
+  const getUsersName = (id) => {
+    const user = users.find((user) => user.id === id);
+    return user ? user.name : "Unknown User";
   };
 
   const toggleOpenDropdown = (id) => {
@@ -58,7 +66,7 @@ export default function KasirPayments() {
             {/* Create Button */}
             <div className="w-full md:w-auto">
               <Link
-                to="/kasir/payments/create" // pastikan route create sudah ada
+                to="/admin/payments/create" // pastikan route create sudah ada
                 className="inline-flex items-center px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
               >
                 + Create Payment
@@ -73,6 +81,7 @@ export default function KasirPayments() {
                 <tr>
                   <th className="px-4 py-3">Id</th>
                   <th className="px-4 py-3">Order</th>
+                  <th className="px-4 py-3">User</th>
                   <th className="px-4 py-3">Kode Pembayaran</th>
                   <th className="px-4 py-3">Payment Method</th>
                   <th className="px-4 py-3">Total Amount</th>
@@ -89,14 +98,13 @@ export default function KasirPayments() {
                     <tr key={payment.id} className="border-b dark:border-gray-700">
                       <td className="px-4 py-3">{payment.id}</td>
                       <td className="px-4 py-3">{getOrdersId(payment.order_id)}</td>
+                      <td className="px-4 py-3">{getUsersName(payment.user_id)}</td>
                       <td className="px-4 py-3">{payment.kode_pembayaran}</td>
                       <td className="px-4 py-3">{payment.payment_method}</td>
                       <td className="px-4 py-3">{payment.total_amount}</td>
                       <td className="px-4 py-3">{payment.amount_paid}</td>
                       <td className="px-4 py-3">{payment.change_amount}</td>
                       <td className="px-4 py-3">{payment.status}</td>
-
-                      {/* Action Dropdown */}
                       <td className="relative px-4 py-3 text-right">
                         <button
                           onClick={() => setOpenDropdownId(openDropdownId === payment.id ? null : payment.id)}
@@ -106,7 +114,6 @@ export default function KasirPayments() {
                             <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
                           </svg>
                         </button>
-
                         {openDropdownId === payment.id && (
                           <div className="absolute right-0 z-10 mt-2 bg-white rounded-lg shadow w-44 dark:bg-gray-700">
                             <ul className="py-1 text-sm text-gray-700 dark:text-gray-200">

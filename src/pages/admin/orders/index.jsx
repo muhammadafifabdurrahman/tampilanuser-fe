@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getOrders } from "../../../_services/orders";
+import { deleteOrders, getOrders } from "../../../_services/orders";
 
 export default function AdminOrders() {
   const [orders, setOrders] = useState([]);
@@ -18,6 +18,14 @@ export default function AdminOrders() {
   const toggleOpenDropdown = (id) => {
     setOpenDropdownId(openDropdownId === id ? null : id);
   };
+
+  const handleDelete = async (id) => {
+          const confirmDelete = window.confirm("Are you sure to delete this Order?");
+          if(confirmDelete){
+              await deleteOrders(id);
+              setOrders(orders.filter((order) => order.id !== id));
+          }
+      }
 
   return (
     <>
@@ -153,7 +161,7 @@ export default function AdminOrders() {
                             </li>
                           </ul>
                           <div className="py-1">
-                            <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</button>
+                            <button onClick={ ()=> handleDelete(order.id)} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</button>
                           </div>
                         </div>
                       )}
