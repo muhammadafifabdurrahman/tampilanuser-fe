@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getPayments } from "../../../_services/payments";
+import { deletePayments, getPayments } from "../../../_services/payments";
 import { getOrders } from "../../../_services/orders";
 import { getUsers } from "../../../_services/users";
-import { deleteMenus } from "../../../_services/menus";
 
 export default function AdminPayments() {
   const [payments, setPayments] = useState([]);
@@ -42,7 +41,7 @@ export default function AdminPayments() {
   const handleDelete = async (id) => {
         const confirmDelete = window.confirm("Are you sure to delete this Payment?");
         if(confirmDelete){
-            await deleteMenus(id);
+            await deletePayments(id);
             setPayments(payments.filter((payment) => payment.id !== id));
         }
     }

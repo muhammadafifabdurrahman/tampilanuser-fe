@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getUsers } from "../../../_services/users";
+import { deleteUser, getUsers } from "../../../_services/users";
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);
@@ -19,13 +19,13 @@ export default function AdminUsers() {
     setOpenDropdownId(openDropdownId === id ? null : id);
   };
 
-  // const handleDelete = async (id) => {
-  //     const confirmDelete = window.confirm("Are you sure to delete this User?");
-  //     if(confirmDelete){
-  //         await deleteUsers(id);
-  //         setUsers(users.filter((user) => user.id !== id));
-  //     }
-  // }
+  const handleDelete = async (id) => {
+      const confirmDelete = window.confirm("Are you sure to delete this User?");
+      if(confirmDelete){
+          await deleteUser(id);
+          setUsers(users.filter((user) => user.id !== id));
+      }
+  }
 
   return (
     <>
@@ -56,7 +56,7 @@ export default function AdminUsers() {
             <div className="flex flex-col items-stretch justify-end flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
               <Link
                 to={"/admin/users/create"}
-                className="flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-700 rounded-lg hover:bg-indigo-800 focus:ring-4 focus:ring-indigo-300 dark:bg-indigo-600 dark:hover:bg-indigo-700 focus:outline-none dark:focus:ring-indigo-800"
+                className="flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-600 focus:ring-4 focus:ring-yellow-300 dark:bg-yellow-600 dark:hover:bg-indigo-700 focus:outline-none dark:focus:ring-indigo-800"
               >
                 <svg className="h-3.5 w-3.5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                   <path clipRule="evenodd" fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
@@ -120,7 +120,7 @@ export default function AdminUsers() {
                               </li>
                             </ul>
                             <div className="py-1">
-                              <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</button>
+                              <button onClick={ ()=> handleDelete(user.id)} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</button>
                             </div>
                           </div>
                         )}

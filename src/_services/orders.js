@@ -35,7 +35,7 @@ export const showOrders = async (id) => {
 
 export const updateOrders = async (id, data) => {
   try {
-    const response = await API.put(`/orders/${id}?_method=PUT`, data, {
+    const response = await API.post(`/orders/${id}`, data, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
@@ -49,7 +49,11 @@ export const updateOrders = async (id, data) => {
 
 export const deleteOrders = async (id) => {
   try {
-    await API.delete(`/orders/${id}`);
+    await API.delete(`/orders/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    });
   } catch (error) {
     console.log(error);
     throw error;

@@ -1,169 +1,196 @@
+// OrderEdit.jsx
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { showOrders, updateOrders } from "../../../_services/orders";
 import { getMenus } from "../../../_services/menus";
 
-export default function KasirEdit() {
+export default function KasirOrderEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [menus, setMenus] = useState([]);
-  const [formData, setFormData] = useState({
+  const [orderItems, setOrderItems] = useState([]);
+  const [form, setForm] = useState({
     customer_name: "",
     table_number: "",
     order_type: "dine_in",
-    status: "pending",
     note: "",
-    items: [],
+    status: "pending",
+    _method: "PUT",
   });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
 
-  // Ambil order & menu
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [menusData, orderData] = await Promise.all([getMenus(), showOrders(id)]);
-        setMenus(menusData);
+        // ============= GET MENUS FIX =============
+        const menuRes = await getMenus();
 
-        setFormData({
-          customer_name: orderData.customer_name || "",
-          table_number: orderData.table_number || "",
-          order_type: orderData.order_type || "dine_in",
-          status: orderData.status || "pending",
-          note: orderData.note || "",
-          items: (orderData.orderItems || []).map((item) => ({
-            menu_id: item.menu?.id || 0, // null-safe
-            quantity: item.quantity,
-          })),
+        // AUTO DETECT STRUKTUR API
+        const menuData =
+          menuRes?.data?.data ?? // { data: { data: [] }}
+          menuRes?.data ?? // { data: [] }
+          menuRes ?? // langsung []
+          [];
+
+        console.log("MENU RESPONSE FIXED:", menuData);
+        setMenus(menuData);
+
+        // ============= GET ORDER =============
+        const order = await showOrders(id);
+        console.log("ORDER DATA:", order);
+
+        if (!order) {
+          alert("Order tidak ditemukan!");
+          return;
+        }
+
+        // SET FORM
+        setForm({
+          customer_name: order.customer_name ?? "",
+          table_number: order.table_number ?? "",
+          order_type: order.order_type ?? "dine_in",
+          note: order.note ?? "",
+          status: order.status ?? "pending",
+          _method: "PUT",
         });
 
-        setLoading(false);
+        // MAPPING ITEMS BACKEND
+        const items = order.order_items ?? order.orderItems ?? order.items ?? [];
+
+        setOrderItems(
+          Array.isArray(items)
+            ? items.map((item) => ({
+                menu_id: item.menu_id,
+                quantity: item.quantity,
+              }))
+            : []
+        );
       } catch (err) {
-        setError("Failed to fetch data");
-        setLoading(false);
+        console.error(err);
+        alert("Gagal mengambil data!");
       }
     };
+
     fetchData();
   }, [id]);
 
+  // ============ HANDLERS ============
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleItemChange = (index, field, value) => {
-    const newItems = [...formData.items];
-    newItems[index][field] = field === "quantity" ? parseInt(value) : value;
-    setFormData((prev) => ({ ...prev, items: newItems }));
+    const clone = [...orderItems];
+    clone[index][field] = value;
+    setOrderItems(clone);
   };
 
-  const addItem = () => {
-    if (!menus.length) return;
-    setFormData((prev) => ({
-      ...prev,
-      items: [...prev.items, { menu_id: menus[0].id, quantity: 1 }],
-    }));
+  const addItemRow = () => {
+    setOrderItems([...orderItems, { menu_id: "", quantity: 1 }]);
   };
 
-  const removeItem = (index) => {
-    const newItems = formData.items.filter((_, i) => i !== index);
-    setFormData((prev) => ({ ...prev, items: newItems }));
+  const removeItemRow = (index) => {
+    setOrderItems(orderItems.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+
+    const payload = {
+      ...form,
+      items: orderItems.map((i) => ({
+        menu_id: Number(i.menu_id),
+        quantity: Number(i.quantity),
+      })),
+    };
 
     try {
-      const response = await updateOrders(id, formData);
-      if (response.success) {
-        alert("Order updated successfully");
-        navigate("/kasir/orders"); // atau /admin/orders sesuai route kamu
-      } else {
-        setError(response.message || "Update failed");
-      }
-    } catch (err) {
-      setError(err.message || "Update failed");
+      await updateOrders(id, payload);
+      alert("Order berhasil diperbarui!");
+      navigate("/admin/orders");
+    } catch (error) {
+      console.error(error);
+      alert("Gagal update order!");
     }
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div className="text-red-500">{error}</div>;
+  const safeItems = Array.isArray(orderItems) ? orderItems : [];
 
   return (
-    <div className="min-h-screen p-5 bg-gray-50 dark:bg-gray-900">
-      <h2 className="mb-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">Edit Order #{id}</h2>
+    <section className="p-5">
+      <div className="max-w-4xl p-6 mx-auto bg-white rounded-lg shadow">
+        <h1 className="mb-5 text-2xl font-semibold">Edit Order #{id}</h1>
 
-      <form onSubmit={handleSubmit} className="p-6 space-y-5 bg-white rounded-lg shadow dark:bg-gray-800">
-        {/* Customer & Table */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* FORM INPUTS */}
           <div>
-            <label className="block mb-1 text-gray-600 dark:text-gray-300">Customer Name</label>
-            <input type="text" name="customer_name" value={formData.customer_name} onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+            <label className="block mb-1">Customer Name</label>
+            <input type="text" name="customer_name" value={form.customer_name} onChange={handleChange} className="w-full p-2 border rounded" required />
           </div>
-          <div>
-            <label className="block mb-1 text-gray-600 dark:text-gray-300">Table Number</label>
-            <input type="text" name="table_number" value={formData.table_number} onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
-          </div>
-        </div>
 
-        {/* Order Type & Status */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
-            <label className="block mb-1 text-gray-600 dark:text-gray-300">Order Type</label>
-            <select name="order_type" value={formData.order_type} onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            <label className="block mb-1">Table Number</label>
+            <input type="number" name="table_number" value={form.table_number} onChange={handleChange} className="w-full p-2 border rounded" />
+          </div>
+
+          <div>
+            <label className="block mb-1">Order Type</label>
+            <select name="order_type" value={form.order_type} onChange={handleChange} className="w-full p-2 border rounded">
               <option value="dine_in">Dine In</option>
               <option value="take_away">Take Away</option>
             </select>
           </div>
+
           <div>
-            <label className="block mb-1 text-gray-600 dark:text-gray-300">Status</label>
-            <select name="status" value={formData.status} onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            <label className="block mb-1">Note</label>
+            <textarea name="note" value={form.note} onChange={handleChange} className="w-full p-2 border rounded" />
+          </div>
+
+          <div>
+            <label className="block mb-1">Status</label>
+            <select name="status" value={form.status} onChange={handleChange} className="w-full p-2 border rounded">
               <option value="pending">Pending</option>
               <option value="processing">Processing</option>
               <option value="completed">Completed</option>
               <option value="cancelled">Cancelled</option>
             </select>
           </div>
-        </div>
 
-        {/* Note */}
-        <div>
-          <label className="block mb-1 text-gray-600 dark:text-gray-300">Note</label>
-          <textarea name="note" value={formData.note} onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
-        </div>
+          {/* ================== ITEMS ====================== */}
+          <div>
+            <h2 className="mb-2 text-lg font-semibold">Order Items</h2>
 
-        {/* Order Items */}
-        <div>
-          <label className="block mb-2 text-gray-600 dark:text-gray-300">Order Items</label>
-          {formData.items.map((item, index) => (
-            <div key={index} className="flex flex-col gap-2 mb-2 md:flex-row">
-              <select value={item.menu_id} onChange={(e) => handleItemChange(index, "menu_id", e.target.value)} className="flex-1 p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                {menus.map((menu) => (
-                  <option key={menu.id} value={menu.id}>
-                    {menu.name} (Rp{menu.price})
-                  </option>
-                ))}
-              </select>
-              <input type="number" min="1" value={item.quantity} onChange={(e) => handleItemChange(index, "quantity", e.target.value)} className="w-24 p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
-              <button type="button" onClick={() => removeItem(index)} className="px-3 py-1 text-white bg-red-500 rounded hover:bg-red-600">
-                Remove
-              </button>
-            </div>
-          ))}
-          <button type="button" onClick={addItem} className="px-4 py-2 mt-2 text-white bg-green-500 rounded hover:bg-green-600">
-            + Add Item
-          </button>
-        </div>
+            {safeItems.map((item, index) => (
+              <div key={index} className="flex items-center gap-3 mb-2">
+                <select value={item.menu_id} onChange={(e) => handleItemChange(index, "menu_id", e.target.value)} className="flex-1 p-2 border rounded">
+                  <option value="">Select Menu</option>
+                  {menus.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.name}
+                    </option>
+                  ))}
+                </select>
 
-        {/* Submit */}
-        <div className="flex justify-end">
-          <button type="submit" className="px-6 py-2 text-white bg-indigo-600 rounded hover:bg-indigo-700">
+                <input type="number" value={item.quantity} min="1" onChange={(e) => handleItemChange(index, "quantity", e.target.value)} className="w-20 p-2 border rounded" />
+
+                {index > 0 && (
+                  <button type="button" onClick={() => removeItemRow(index)} className="px-3 py-1 text-red-600 border border-red-500 rounded">
+                    X
+                  </button>
+                )}
+              </div>
+            ))}
+
+            <button type="button" onClick={addItemRow} className="px-4 py-2 mt-2 text-white bg-indigo-600 rounded">
+              + Add Item
+            </button>
+          </div>
+
+          <button type="submit" className="px-5 py-2 text-white bg-indigo-700 rounded">
             Update Order
           </button>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    </section>
   );
 }

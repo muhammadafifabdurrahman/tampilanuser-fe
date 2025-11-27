@@ -29,7 +29,7 @@ export default function CategoriesCreate() {
 
             await createCategories(payload);
             navigate("/admin/categories")
-            alert('Category berhasil ditambahkan')
+            alert('Kategori berhasil ditambahkan!')
         } catch (error){ 
             console.log(error);
             alert("Error creating category")

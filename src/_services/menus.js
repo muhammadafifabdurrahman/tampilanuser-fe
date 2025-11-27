@@ -31,9 +31,9 @@ export const showMenus = async (id) => {
 
 export const updateMenus = async (id, data) => {
   try {
-    const response = await API.put(`/menus/${id}?_method=PUT`, data, {
+    const response = await API.post(`/menus/${id}`, data, {
       headers: {
-        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
     });
     return response.data;

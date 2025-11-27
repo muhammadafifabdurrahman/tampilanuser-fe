@@ -9,39 +9,43 @@ export const getUsers = async () => {
   return data.data;
 };
 
-export const createusers = async (data) => {
-      try {
-            const response = await API.post("/users", data)
-            return response.data
-      } catch (error){
-            console.log(error);
-            throw error
-      }
-}
+export const createUsers = async (data) => {
+  try {
+    const response = await API.post("/users", data);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
 
-export const showusers = async (id) => {
-      try {
-            const { data } = await API.get(`/users/${id}`)
-            return data.data
-      } catch (error) {
-            console.log(error)
-            throw error
-      }
-}
-
-export const updateusers = async (id, data) => {
-      try {
-            const response = await API.put(`/users/${id}?_method=PUT`, data, {
+export const showUsers = async (id) => {
+  try {
+    const { data } = await API.get(`/users/${id}`, {
       headers: {
-        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
-    })
-    return response.data
-      } catch (error){
-            console.log(error)
-            throw error
-      }
-}     
+    });
+    return data.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const updateUsers = async (id, data) => {
+  try {
+    const response = await API.put(`/users/${id}`, data, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error.response?.data);
+    throw error;
+  }
+};
 
 export const deleteUser = async (id) => {
   const { data } = await API.delete(`/users/${id}`, {

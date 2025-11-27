@@ -1,34 +1,48 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getPayments } from "../../../_services/payments";
+import { deletePayments, getPayments } from "../../../_services/payments";
 import { getOrders } from "../../../_services/orders";
-import { getUsers } from "../../../_services/users";
 
-export default function AdminPayments() {
+export default function KasirPayments() {
   const [payments, setPayments] = useState([]);
   const [orders, setOrders] = useState([]);
-  const [users, setUsers] = useState([]);
 
-  const [openDropdownId, setOpenDropdownId] = useState([]);
+  const [openDropdownId, setOpenDropdownId] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      const [paymentsData, ordersData, usersData] = await Promise.all([getPayments(), getOrders(), getUsers()]);
+      const [paymentsData, ordersData] = await Promise.all([getPayments(), getOrders()]);
       setPayments(paymentsData);
       setOrders(ordersData);
-      setUsers(usersData);
+      // setUsers(usersData);
     };
     fetchData();
   }, []);
 
-  const getOrdersId = (id) => {
+  // const getOrdersId = (id) => {
+  //   const order = orders.find((order) => order.id === id);
+  //   return order ? order.order_number : "Unknown Order";
+  // };
+
+  const getOrdersName = (id) => {
     const order = orders.find((order) => order.id === id);
-    return order ? order.order_number : "Unknown Order";
+    return order ? order.customer_name : "Unknown Order";
+  };
+  const getOrdersNumber = (id) => {
+    const order = orders.find((order) => order.id === id);
+    return order ? order.order_number : "Unknown Order Number";
+  };
+  const getOrdersTotal = (id) => {
+    const order = orders.find((order) => order.id === id);
+    return order ? order.total_amount : "Unknown Order Number";
   };
 
-  const getUsersName = (id) => {
-    const user = users.find((user) => user.id === id);
-    return user ? user.name : "Unknown User";
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("Are you sure to delete this Payment?");
+    if (confirmDelete) {
+      await deletePayments(id);
+      setPayments(payments.filter((payment) => payment.id !== id));
+    }
   };
 
   const toggleOpenDropdown = (id) => {
@@ -63,13 +77,15 @@ export default function AdminPayments() {
               </form>
             </div>
 
-            {/* Create Button */}
-            <div className="w-full md:w-auto">
+            <div className="flex flex-col items-stretch justify-end flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
               <Link
-                to="/admin/payments/create" // pastikan route create sudah ada
-                className="inline-flex items-center px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
+                to={"/kasir/payments/create"}
+                className="flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-600 focus:ring-4 focus:ring-indigo-300 dark:bg-yellow-600 dark:hover:bg-yellow-600 focus:outline-none dark:focus:ring-yellow-800"
               >
-                + Create Payment
+                <svg className="h-3.5 w-3.5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path clipRule="evenodd" fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                </svg>
+                Add Payments
               </Link>
             </div>
           </div>
@@ -80,15 +96,15 @@ export default function AdminPayments() {
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   <th className="px-4 py-3">Id</th>
-                  <th className="px-4 py-3">Order</th>
-                  <th className="px-4 py-3">User</th>
+                  <th className="px-4 py-3">Order Id</th>
+                  <th className="px-4 py-3">Customer Name</th>
                   <th className="px-4 py-3">Kode Pembayaran</th>
                   <th className="px-4 py-3">Payment Method</th>
                   <th className="px-4 py-3">Total Amount</th>
                   <th className="px-4 py-3">Amount Paid</th>
                   <th className="px-4 py-3">Change Amount</th>
                   <th className="px-4 py-3">Status</th>
-                  <th className="px-4 py-3">Action</th>
+                  <th className="px-4 py-3 text-center">Action</th>
                 </tr>
               </thead>
 
@@ -97,11 +113,11 @@ export default function AdminPayments() {
                   payments.map((payment) => (
                     <tr key={payment.id} className="border-b dark:border-gray-700">
                       <td className="px-4 py-3">{payment.id}</td>
-                      <td className="px-4 py-3">{getOrdersId(payment.order_id)}</td>
-                      <td className="px-4 py-3">{getUsersName(payment.user_id)}</td>
-                      <td className="px-4 py-3">{payment.kode_pembayaran}</td>
+                      <td className="px-4 py-3">{payment.order_id}</td>
+                      <td className="px-4 py-3">{getOrdersName(payment.order_id)}</td>
+                      <td className="px-4 py-3">{getOrdersNumber(payment.order_id)}</td>
                       <td className="px-4 py-3">{payment.payment_method}</td>
-                      <td className="px-4 py-3">{payment.total_amount}</td>
+                      <td className="px-4 py-3">{getOrdersTotal(payment.order_id)}</td>
                       <td className="px-4 py-3">{payment.amount_paid}</td>
                       <td className="px-4 py-3">{payment.change_amount}</td>
                       <td className="px-4 py-3">{payment.status}</td>
@@ -118,12 +134,14 @@ export default function AdminPayments() {
                           <div className="absolute right-0 z-10 mt-2 bg-white rounded-lg shadow w-44 dark:bg-gray-700">
                             <ul className="py-1 text-sm text-gray-700 dark:text-gray-200">
                               <li>
-                                <Link to={`/admin/payments/edit/${payment.id}`} className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                <Link to={`/kasir/payments/edit/${payment.id}`} className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                   Edit
                                 </Link>
                               </li>
                               <li>
-                                <button className="block w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Delete</button>
+                                <button onClick={() => handleDelete(payment.id)} className="block w-full px-4 py-2 text-right hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                  Delete
+                                </button>
                               </li>
                             </ul>
                           </div>

@@ -25,7 +25,11 @@ export const createPayments = async (data) => {
 
 export const showPayments = async (id) => {
   try {
-    const { data } = await API.get(`/payments/${id}`);
+    const { data } = await API.get(`/payments/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    });
     return data.data;
   } catch (error) {
     console.log(error);
@@ -35,9 +39,9 @@ export const showPayments = async (id) => {
 
 export const updatePayments = async (id, data) => {
   try {
-    const response = await API.put(`/payments/${id}?_method=PUT`, data, {
+    const response = await API.post(`/payments/${id}`, data, {
       headers: {
-        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
     });
     return response.data;
@@ -49,7 +53,11 @@ export const updatePayments = async (id, data) => {
 
 export const deletePayments = async (id) => {
   try {
-    await API.delete(`/payments/${id}`);
+    await API.delete(`/payments/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    });
   } catch (error) {
     console.log(error);
     throw error;

@@ -31,9 +31,9 @@ export const showCategories = async (id) => {
 
 export const updateCategories = async (id, data) => {
   try {
-    const response = await API.put(`/categories/${id}?_method=PUT`, data, {
+    const response = await API.post(`/categories/${id}`, data, {
       headers: {
-        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
     });
     return response.data;

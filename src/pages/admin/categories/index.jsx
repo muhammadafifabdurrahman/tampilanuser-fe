@@ -21,7 +21,7 @@ export default function AdminCategories() {
     }
 
     const handleDelete = async (id) => {
-        const confirmDelete = window.confirm("Are you sure to delete this category?");
+        const confirmDelete = window.confirm("Apakah yakin ingin menghapus Kategori ini?");
         if(confirmDelete){
             await deleteCategories(id);
             setCategories(categories.filter((categori) => categori.id !== id));
@@ -64,10 +64,10 @@ export default function AdminCategories() {
                   </div>
                 </form>
               </div>
-              <div className="flex flex-col items-stretch justify-end flex-shrink-0 w-full space-y-2 text-white bg-blue-600 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
+              <div className="flex flex-col items-stretch justify-end flex-shrink-0 w-full space-y-2 bg-blue-600 rounded-lg tounext-white r md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
                 <Link
                   to={'/admin/categories/create'}
-                  className="flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-700 rounded-lg hover:bg-indigo-800 focus:ring-4 focus:ring-indigo-300 dark:bg-indigo-600 dark:hover:bg-indigo-700 focus:outline-none dark:focus:ring-indigo-800"
+                  className="flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-600 focus:ring-4 focus:ring-yellow-300 dark:bg-yellow-600 dark:hover:bg-indigo-700 focus:outline-none dark:focus:ring-indigo-800"
                 >
                   <svg
                     className="h-3.5 w-3.5 mr-2"
@@ -82,7 +82,7 @@ export default function AdminCategories() {
                       d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
                     />
                   </svg>
-                  Add Categori
+                  Add Category
                 </Link>
               </div>
             </div>
@@ -151,7 +151,7 @@ export default function AdminCategories() {
                         >
                           <li>
                             <Link
-                              to={`/admin/users/edit/${categori.id}`}
+                              to={`/admin/categories/edit/${categori.id}`}
                               className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                             >
                               Edit

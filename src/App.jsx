@@ -18,10 +18,16 @@ import KasirLayout from "./layouts/kasir";
 import DashboardKasir from "./pages/kasir";
 import KasirOrders from "./pages/kasir/orders";
 import KasirPayments from "./pages/kasir/payments";
-import KasirEdit from "./pages/kasir/orders/edit";
 import PaymentCreate from "./pages/admin/payments/create";
 import KasirAdd from "./pages/admin/users/create";
 import MenusCreate from "./pages/admin/menus/create";
+import CategoriEdit from "./pages/admin/categories/edit";
+import MenuEdit from "./pages/admin/menus/edit";
+import PaymentEdit from "./pages/admin/payments/edit";
+import OrderCreate from "./pages/admin/orders/create";
+import OrderEdit from "./pages/admin/orders/edit";
+import UserEdit from "./pages/admin/users/edit";
+import KasirOrderEdit from "./pages/kasir/orders/edit";
 
 function App() {
   return (
@@ -45,7 +51,8 @@ function App() {
             <Route index element={<DashboardKasir />} />
             <Route path="orders">
               <Route index element={<KasirOrders />} />
-              <Route path="edit/:id" element={<KasirEdit />} />
+              <Route path='create' element={<OrderCreate />}/>
+              <Route path="edit/:id" element={<KasirOrderEdit/>} />
             </Route>
             <Route path="order_items">
               <Route index element={<AdminOrdersItems />} />
@@ -53,6 +60,7 @@ function App() {
             <Route path="payments">
               <Route index element={<KasirPayments />} />
               <Route path="create" element={<PaymentCreate /> } />
+              <Route path="edit/:id" element={<PaymentEdit/>} />
             </Route>
           </Route>
 
@@ -62,17 +70,22 @@ function App() {
             <Route path="users">
               <Route index element={<AdminUsers />} />
               <Route path="create" element={<KasirAdd />} />
+              <Route path="edit/:id" element={<UserEdit/>} />
             </Route>
             <Route path="categories">
               <Route index element={<AdminCategories />} />
               <Route path="create" element={<CategoriesCreate />} />
+              <Route path="edit/:id" element={<CategoriEdit/>} />
             </Route>
             <Route path="menus">
               <Route index element={<AdminMenus />} />
               <Route path='create' element={<MenusCreate />}/>
+              <Route path="edit/:id" element={<MenuEdit/>} />
             </Route>
             <Route path="orders">
               <Route index element={<AdminOrders />} />
+              <Route path='create' element={<OrderCreate />}/>
+              <Route path="edit/:id" element={<OrderEdit/>} />
             </Route>
             <Route path="order_items">
               <Route index element={<AdminOrdersItems />} />
@@ -80,6 +93,7 @@ function App() {
             <Route path="payments">
               <Route index element={<AdminPayments />} />
               <Route path="create" element={<PaymentCreate /> } />
+              <Route path="edit/:id" element={<PaymentEdit/>} />
             </Route>
           </Route>
         </Routes>

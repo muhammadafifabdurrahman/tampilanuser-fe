@@ -55,20 +55,24 @@ export default function AdminOrders() {
             </div>
             <div className="flex flex-col items-stretch justify-end flex-shrink-0 w-full space-y-2 text-white md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
               <Link
-                to={"/admin/authors/create"}
-                className="flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-700 rounded-lg hover:bg-indigo-800 focus:ring-4 focus:ring-indigo-300 dark:bg-indigo-600 dark:hover:bg-indigo-700 focus:outline-none dark:focus:ring-indigo-800"
-              >
-                <svg className="h-3.5 w-3.5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                  <path
-                    fillRule="evenodd"
-                    d="M8 4a4 4 0 100 8 4 4 0 
-                        000-8zM2 8a6 6 0 1110.89 3.476l4.817 
-                        4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 
-                        6 0 012 8z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </Link>
+                  to={'/admin/orders/create'}
+                  className="flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-600 focus:ring-4 focus:ring-indigo-300 dark:bg-yellow-600 dark:hover:bg-yellow-600 focus:outline-none dark:focus:ring-yellow-800"
+                >
+                  <svg
+                    className="h-3.5 w-3.5 mr-2"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <path
+                      clipRule="evenodd"
+                      fillRule="evenodd"
+                      d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                    />
+                  </svg>
+                  Add Orders
+                </Link>
             </div>
           </div>
         </div>
