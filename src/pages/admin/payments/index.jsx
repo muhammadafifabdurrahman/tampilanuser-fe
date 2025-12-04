@@ -25,7 +25,7 @@ export default function AdminPayments() {
   //   return order ? order.order_number : "Unknown Order";
   // };
 
-  const getOrdersName = (id) => {
+  const getCustomerName = (id) => {
     const order = orders.find((order) => order.id === id);
     return order ? order.customer_name : "Unknown Order";
   };
@@ -106,10 +106,10 @@ export default function AdminPayments() {
             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                  <th className="px-4 py-3">Id</th>
-                  <th className="px-4 py-3">Order Id</th>
+                  <th className="px-4 py-3">No</th>
+                  <th className="px-4 py-3">Order Number</th>
                   <th className="px-4 py-3">Customer Name</th>
-                  <th className="px-4 py-3">Kode Pembayaran</th>
+                  <th className="px-4 py-3">Code Payment</th>
                   <th className="px-4 py-3">Payment Method</th>
                   <th className="px-4 py-3">Total Amount</th>
                   <th className="px-4 py-3">Amount Paid</th>
@@ -121,12 +121,12 @@ export default function AdminPayments() {
 
               <tbody>
                 {payments.length > 0 ? (
-                  payments.map((payment) => (
+                  payments.map((payment, index) => (
                     <tr key={payment.id} className="border-b dark:border-gray-700">
-                      <td className="px-4 py-3">{payment.id}</td>
-                      <td className="px-4 py-3">{payment.order_id}</td>
-                      <td className="px-4 py-3">{getOrdersName(payment.order_id)}</td> 
+                      <td className="px-4 py-3">{index + 1}</td>
                       <td className="px-4 py-3">{getOrdersNumber(payment.order_id)}</td>
+                      <td className="px-4 py-3">{getCustomerName(payment.order_id)}</td> 
+                      <td className="px-4 py-3">{payment.kode_pembayaran}</td>
                       <td className="px-4 py-3">{payment.payment_method}</td>
                       <td className="px-4 py-3">{getOrdersTotal(payment.order_id)}</td>
                       <td className="px-4 py-3">{payment.amount_paid}</td>

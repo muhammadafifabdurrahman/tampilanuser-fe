@@ -1,24 +1,44 @@
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import Logo from "../assets/food-logo.png"; // Pastikan path logo benar
-import { LayoutDashboard, Users, Menu, ShoppingBag, CreditCard, LogOut, Layers, ClipboardList } from "lucide-react"; // Saya tambahkan icon agar lebih bagus (opsional)
+import Logo from "../assets/food-logo.png";
+import { LayoutDashboard, Users, Menu, ShoppingBag, CreditCard, LogOut, Layers, ClipboardList } from "lucide-react";
 import { logout, useDecodeToken } from "../_services/auth";
 import { useEffect } from "react";
 
 export default function AdminLayout() {
   const location = useLocation();
-
   const navigate = useNavigate();
+
+  // Ambil token & userInfo (dengan fallback aman)
   const token = localStorage.getItem("accessToken");
-  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}");
+
+  // Decode token
   const decodedData = useDecodeToken(token);
 
   useEffect(() => {
-    if (!token || !decodedData || !decodedData.success) {
+    // Jika tidak ada token → arahkan login
+    if (!token) {
       navigate("/login");
+      return;
     }
 
-    const role = userInfo.role;
-    if (role !== "admin" || !role) {
+    // Jika token tidak valid → arahkan login
+    if (!decodedData || !decodedData.success) {
+      navigate("/login");
+      return;
+    }
+
+    // Cek role user
+    const role = userInfo?.role;
+
+    // Jika userInfo tidak ada role → arahkan login
+    if (!role) {
+      navigate("/login");
+      return;
+    }
+
+    // Jika role bukan admin → arahkan kasir
+    if (role !== "admin") {
       navigate("/kasir");
     }
   }, [token, decodedData, navigate]);
@@ -27,24 +47,25 @@ export default function AdminLayout() {
     if (token) {
       await logout({ token });
       localStorage.removeItem("userInfo");
+      localStorage.removeItem("accessToken");
       navigate("/login");
     }
   };
 
-  // Helper untuk mengecek menu aktif
+  // Sidebar active menu
   const isActive = (path) => location.pathname === path;
   const baseClass = "flex items-center p-2 rounded-lg group transition-colors duration-200";
-  const activeClass = "bg-primary text-white dark:bg-primary"; // Ganti warna aktif sesuai selera (misal kuning/orange)
+  const activeClass = "bg-primary text-white dark:bg-primary";
   const inactiveClass = "text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700";
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* --- NAVBAR FIXED --- */}
+      {/* NAVBAR */}
       <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 shadow-sm dark:bg-gray-800 dark:border-gray-700">
         <div className="px-3 py-3 lg:px-5 lg:pl-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center justify-start rtl:justify-end">
-              {/* Mobile Menu Button */}
+              {/* Mobile */}
               <button
                 data-drawer-target="logo-sidebar"
                 data-drawer-toggle="logo-sidebar"
@@ -65,17 +86,16 @@ export default function AdminLayout() {
               {/* Logo */}
               <Link to="/admin" className="flex items-center gap-2 ms-2 md:me-24">
                 <img src={Logo} className="h-8 me-3" alt="RasaLokal Logo" />
-                <span className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">RasaLokal</span>
+                <span className="text-xl font-semibold sm:text-2xl dark:text-white">RasaLokal</span>
               </Link>
             </div>
 
-            {/* Right Side (User Profile) */}
+            {/* Right - Profile */}
             <div className="flex items-center">
               <div className="flex items-center ms-3">
                 <div className="flex items-center gap-3">
                   <span className="hidden text-sm font-medium text-gray-900 dark:text-gray-300 md:block">Admin User</span>
-                  <button type="button" className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600">
-                    <span className="sr-only">Open user menu</span>
+                  <button className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600">
                     <img className="w-8 h-8 rounded-full" src="https://ui-avatars.com/api/?name=Admin+User&background=ffc001&color=fff" alt="user photo" />
                   </button>
                 </div>
@@ -85,66 +105,65 @@ export default function AdminLayout() {
         </div>
       </nav>
 
-      {/* --- SIDEBAR --- */}
+      {/* SIDEBAR */}
       <aside id="logo-sidebar" className="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700" aria-label="Sidebar">
-        <div className="flex flex-col justify-between h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
-          {/* Menu Utama */}
+        <div className="flex flex-col justify-between h-full px-3 pb-4 overflow-y-auto">
           <ul className="space-y-2 font-medium">
             <li>
               <Link to="/admin" className={`${baseClass} ${isActive("/admin") ? activeClass : inactiveClass}`}>
-                <LayoutDashboard className="w-5 h-5 transition duration-75" />
+                <LayoutDashboard className="w-5 h-5" />
                 <span className="ms-3">Dashboard</span>
               </Link>
             </li>
 
             <li>
               <Link to="/admin/users" className={`${baseClass} ${isActive("/admin/users") ? activeClass : inactiveClass}`}>
-                <Users className="w-5 h-5 transition duration-75" />
+                <Users className="w-5 h-5" />
                 <span className="ms-3">Users</span>
               </Link>
             </li>
 
             <li>
               <Link to="/admin/categories" className={`${baseClass} ${isActive("/admin/categories") ? activeClass : inactiveClass}`}>
-                <Layers className="w-5 h-5 transition duration-75" />
+                <Layers className="w-5 h-5" />
                 <span className="ms-3">Categories</span>
               </Link>
             </li>
 
             <li>
               <Link to="/admin/menus" className={`${baseClass} ${isActive("/admin/menus") ? activeClass : inactiveClass}`}>
-                <Menu className="w-5 h-5 transition duration-75" />
+                <Menu className="w-5 h-5" />
                 <span className="ms-3">Menus</span>
               </Link>
             </li>
 
             <li>
               <Link to="/admin/order_items" className={`${baseClass} ${isActive("/admin/order_items") ? activeClass : inactiveClass}`}>
-                <ClipboardList className="w-5 h-5 transition duration-75" />
+                <ClipboardList className="w-5 h-5" />
                 <span className="ms-3">Order Items</span>
               </Link>
             </li>
 
             <li>
               <Link to="/admin/orders" className={`${baseClass} ${isActive("/admin/orders") ? activeClass : inactiveClass}`}>
-                <ShoppingBag className="w-5 h-5 transition duration-75" />
+                <ShoppingBag className="w-5 h-5" />
                 <span className="ms-3">Orders</span>
               </Link>
             </li>
 
             <li>
               <Link to="/admin/payments" className={`${baseClass} ${isActive("/admin/payments") ? activeClass : inactiveClass}`}>
-                <CreditCard className="w-5 h-5 transition duration-75" />
+                <CreditCard className="w-5 h-5" />
                 <span className="ms-3">Payments</span>
               </Link>
             </li>
           </ul>
 
-          {/* Menu Bawah (Logout) */}
+          {/* Bottom Logout */}
           <ul className="pt-4 mt-4 space-y-2 border-t border-gray-200 dark:border-gray-700">
             <li>
-              <button onClick={handleLogout} className="flex items-center p-2 text-red-600 transition-colors rounded-lg hover:bg-red-50 dark:text-red-500 dark:hover:bg-gray-700 group">
-                <LogOut className="w-5 h-5 transition duration-75" />
+              <button onClick={handleLogout} className="flex items-center p-2 text-red-600 rounded-lg hover:bg-red-50 dark:text-red-500 dark:hover:bg-gray-700">
+                <LogOut className="w-5 h-5" />
                 <span className="ms-3">Logout</span>
               </button>
             </li>
@@ -152,7 +171,7 @@ export default function AdminLayout() {
         </div>
       </aside>
 
-      {/* --- MAIN CONTENT --- */}
+      {/* MAIN CONTENT */}
       <div className="p-4 pt-20 sm:ml-64">
         <div className="w-full">
           <Outlet />

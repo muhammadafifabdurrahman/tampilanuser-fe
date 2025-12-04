@@ -47,24 +47,14 @@ export default function KasirOrders() {
             </div>
             <div className="flex flex-col items-stretch justify-end flex-shrink-0 w-full space-y-2 text-white md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
               <Link
-                  to={'/kasir/orders/create'}
-                  className="flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-600 focus:ring-4 focus:ring-indigo-300 dark:bg-yellow-600 dark:hover:bg-yellow-600 focus:outline-none dark:focus:ring-yellow-800"
-                >
-                  <svg
-                    className="h-3.5 w-3.5 mr-2"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
-                  >
-                    <path
-                      clipRule="evenodd"
-                      fillRule="evenodd"
-                      d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                    />
-                  </svg>
-                  Add Orders
-                </Link>
+                to={"/kasir/orders/create"}
+                className="flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-600 focus:ring-4 focus:ring-indigo-300 dark:bg-yellow-600 dark:hover:bg-yellow-600 focus:outline-none dark:focus:ring-yellow-800"
+              >
+                <svg className="h-3.5 w-3.5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path clipRule="evenodd" fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                </svg>
+                Add Orders
+              </Link>
             </div>
           </div>
         </div>
@@ -73,7 +63,7 @@ export default function KasirOrders() {
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" className="px-4 py-3">
-                  Id
+                  No
                 </th>
                 <th scope="col" className="px-4 py-3">
                   Order Number
@@ -99,6 +89,9 @@ export default function KasirOrders() {
                 <th scope="col" className="px-4 py-3">
                   Note
                 </th>
+                <th scope="col" className="px-4 py-3">
+                  Payment Status
+                </th>
                 <th scope="col" className="px-4 py-3 text-center">
                   Action
                 </th>
@@ -106,10 +99,10 @@ export default function KasirOrders() {
             </thead>
             <tbody>
               {orders.length > 0 ? (
-                orders.map((order) => (
+                orders.map((order, index) => (
                   <tr key={order.id} className="border-b dark:border-gray-700">
                     <th scope="row" className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                      {order.id}
+                      {index + 1}
                     </th>
                     <th scope="row" className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       {order.order_number}
@@ -135,6 +128,17 @@ export default function KasirOrders() {
                     <td className="px-4 py-3">{order.total_amount}</td>
                     <td className="px-4 py-3">{order.status}</td>
                     <td className="px-4 py-3">{order.note}</td>
+                    <td className="px-4 py-3">
+                      {order.payment?.status === "success" ? (
+                        <span className="font-bold text-green-600">Paid</span>
+                      ) : order.payment?.status === "pending" ? (
+                        <span className="font-bold text-yellow-600">Pending</span>
+                      ) : order.payment?.status === "failed" ? (
+                        <span className="font-bold text-red-600">Failed</span>
+                      ) : (
+                        <span className="text-red-600">Not Yet Paid</span>
+                      )}
+                    </td>
                     <td className="relative flex items-center justify-center px-4 py-3">
                       <button
                         id={`dropdown-button-${order.id}`}

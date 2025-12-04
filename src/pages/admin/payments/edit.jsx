@@ -164,7 +164,7 @@ export default function PaymentEdit() {
             </div>
           </div>
 
-          <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 px-5 py-2.5 rounded-lg">
+          <button type="submit" className="text-white bg-yellow-500 hover:bg-yellow-600 px-5 py-2.5 rounded-lg">
             Update Payment
           </button>
         </form>

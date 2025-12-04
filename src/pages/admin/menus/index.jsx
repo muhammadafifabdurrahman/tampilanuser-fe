@@ -101,7 +101,7 @@ export default function AdminMenus() {
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
                     <th scope="col" className="px-4 py-3">
-                      Id
+                      No
                     </th>
                     <th scope="col" className="px-4 py-3">
                       Name
@@ -128,13 +128,13 @@ export default function AdminMenus() {
                 </thead>
                 <tbody>
                   { menus.length > 0 ?
-                    menus.map((menu) => (
+                    menus.map((menu, index) => (
                   <tr key={menu.id} className="border-b dark:border-gray-700">
                     <th
                       scope="row"
                       className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
-                      {menu.id} 
+                      {index + 1} 
                     </th> 
                     <td className="px-4 py-3">{menu.name}</td>
                     <td className="px-4 py-3">{menu.description}</td>

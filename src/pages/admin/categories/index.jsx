@@ -91,7 +91,7 @@ export default function AdminCategories() {
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
                     <th scope="col" className="px-4 py-3">
-                      Id
+                      No
                     </th>
                     <th scope="col" className="px-4 py-3">
                       Name
@@ -106,13 +106,13 @@ export default function AdminCategories() {
                 </thead>
                 <tbody>
                    { categories.length > 0 ?
-                    categories.map((categori) => (
+                    categories.map((categori, index) => (
                   <tr key={categori.id} className="border-b dark:border-gray-700">
                     <th
                       scope="row"
                       className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
-                      {categori.id} 
+                      {index + 1} 
                     </th> 
                     <th
                       scope="row"

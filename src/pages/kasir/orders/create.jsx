@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { createOrders } from "../../../_services/orders";
 import { getMenus } from "../../../_services/menus";
 
-export default function OrderCreate() {
+export default function KasirOrderCreate() {
   const navigate = useNavigate();
 
   const [menus, setMenus] = useState([]);
@@ -58,7 +58,7 @@ export default function OrderCreate() {
     try {
       await createOrders(payload);
       alert("Order created successfully!");
-      navigate("/admin/orders");
+      navigate("/kasir/orders");
     } catch (error) {
       console.error(error);
       alert("Failed to create order!");
@@ -68,7 +68,7 @@ export default function OrderCreate() {
   return (
     <section className="p-5 bg-gray-50 dark:bg-gray-900">
       <div className="max-w-4xl p-6 mx-auto bg-white rounded-lg shadow dark:bg-gray-800">
-        <h1 className="mb-5 text-2xl font-semibold text-gray-800 dark:text-white">Create New Order</h1>
+        <h1 className="mb-5 text-2xl font-semibold text-gray-800 dark:text-white">Add New Order</h1>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* CUSTOMER */}
@@ -123,12 +123,12 @@ export default function OrderCreate() {
               </div>
             ))}
 
-            <button type="button" onClick={addItemRow} className="px-4 py-2 mt-2 text-white bg-indigo-600 rounded">
+            <button type="button" onClick={addItemRow} className="px-4 py-2 mt-2 text-white bg-yellow-500 rounded">
               + Add Item
             </button>
           </div>
 
-          <button type="submit" className="px-5 py-2 text-white bg-indigo-700 rounded-lg hover:bg-indigo-800">
+          <button type="submit" className="px-5 py-2 text-white bg-yellow-500 rounded-lg hover:bg-yellow-600">
             Create Order
           </button>
         </form>

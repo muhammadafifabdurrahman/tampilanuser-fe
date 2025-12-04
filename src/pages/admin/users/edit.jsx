@@ -79,7 +79,7 @@ export default function UserEdit() {
             <button type="button" onClick={() => navigate("/admin/users")} className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 dark:bg-gray-600 dark:text-white dark:hover:bg-gray-700">
               Cancel
             </button>
-            <button type="submit" className="px-4 py-2 text-sm font-medium text-white bg-indigo-700 rounded-lg hover:bg-indigo-800 dark:bg-indigo-600 dark:hover:bg-indigo-700">
+            <button type="submit" className="px-4 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-600 dark:bg-indigo-600 dark:hover:bg-indigo-700">
               Update
             </button>
           </div>

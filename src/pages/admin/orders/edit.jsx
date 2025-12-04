@@ -181,12 +181,12 @@ export default function OrderEdit() {
               </div>
             ))}
 
-            <button type="button" onClick={addItemRow} className="px-4 py-2 mt-2 text-white bg-indigo-600 rounded">
+            <button type="button" onClick={addItemRow} className="px-4 py-2 mt-2 text-white bg-yellow-500 rounded">
               + Add Item
             </button>
           </div>
 
-          <button type="submit" className="px-5 py-2 text-white bg-indigo-700 rounded">
+          <button type="submit" className="px-5 py-2 text-white bg-yellow-500 rounded hover:bg-yellow-600">
             Update Order
           </button>
         </form>

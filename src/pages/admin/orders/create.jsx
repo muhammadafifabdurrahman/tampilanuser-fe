@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { createOrders } from "../../../_services/orders";
 import { getMenus } from "../../../_services/menus";
 
-export default function OrderCreate() {
+export default function AdminOrderCreate() {
   const navigate = useNavigate();
 
   const [menus, setMenus] = useState([]);
@@ -123,12 +123,12 @@ export default function OrderCreate() {
               </div>
             ))}
 
-            <button type="button" onClick={addItemRow} className="px-4 py-2 mt-2 text-white bg-indigo-600 rounded">
+            <button type="button" onClick={addItemRow} className="px-4 py-2 mt-2 text-white bg-yellow-500 rounded">
               + Add Item
             </button>
           </div>
 
-          <button type="submit" className="px-5 py-2 text-white bg-indigo-700 rounded-lg hover:bg-indigo-800">
+          <button type="submit" className="px-5 py-2 text-white bg-yellow-500 rounded-lg hover:bg-yellow-600">
             Create Order
           </button>
         </form>

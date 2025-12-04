@@ -12,7 +12,6 @@ import AdminOrders from "./pages/admin/orders";
 import AdminOrdersItems from "./pages/admin/order_items";
 import AdminPayments from "./pages/admin/payments";
 import Login from "./pages/auth/login";
-import Register from "./pages/auth/register";
 import DashboardAdmin from "./pages/admin";
 import KasirLayout from "./layouts/kasir";
 import DashboardKasir from "./pages/kasir";
@@ -24,10 +23,12 @@ import MenusCreate from "./pages/admin/menus/create";
 import CategoriEdit from "./pages/admin/categories/edit";
 import MenuEdit from "./pages/admin/menus/edit";
 import PaymentEdit from "./pages/admin/payments/edit";
-import OrderCreate from "./pages/admin/orders/create";
 import OrderEdit from "./pages/admin/orders/edit";
 import UserEdit from "./pages/admin/users/edit";
 import KasirOrderEdit from "./pages/kasir/orders/edit";
+import AdminOrderCreate from "./pages/admin/orders/create";
+import KasirOrderCreate from "./pages/kasir/orders/create";
+import KasirPaymentCreate from "./pages/kasir/payments/create";
 
 function App() {
   return (
@@ -39,7 +40,7 @@ function App() {
         <Routes>
           {/* Auth */}
           <Route path="login" element={<Login />} />
-          <Route path="register" element={<Register />} />
+
 
           {/* public layout */}
           <Route element={<Publiclayout />}>
@@ -51,7 +52,7 @@ function App() {
             <Route index element={<DashboardKasir />} />
             <Route path="orders">
               <Route index element={<KasirOrders />} />
-              <Route path='create' element={<OrderCreate />}/>
+              <Route path='create' element={<KasirOrderCreate />}/>
               <Route path="edit/:id" element={<KasirOrderEdit/>} />
             </Route>
             <Route path="order_items">
@@ -59,7 +60,7 @@ function App() {
             </Route>
             <Route path="payments">
               <Route index element={<KasirPayments />} />
-              <Route path="create" element={<PaymentCreate /> } />
+              <Route path="create" element={<KasirPaymentCreate /> } />
               <Route path="edit/:id" element={<PaymentEdit/>} />
             </Route>
           </Route>
@@ -84,7 +85,7 @@ function App() {
             </Route>
             <Route path="orders">
               <Route index element={<AdminOrders />} />
-              <Route path='create' element={<OrderCreate />}/>
+              <Route path='create' element={<AdminOrderCreate />}/>
               <Route path="edit/:id" element={<OrderEdit/>} />
             </Route>
             <Route path="order_items">

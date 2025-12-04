@@ -22,14 +22,14 @@ export default function AdminOrdersItems() {
     fetchData();
   }, []);
 
-  const getOrdersId = (id) => {
+  const getOrderNumber = (id) => {
     const order = orders.find((order) => order.id === id);
-    return order ? order.id : "Unknown Order";
+    return order ? order.order_number : "Unknown Order";
   };
 
-  const getMenusId = (id) => {
+  const getMenuName = (id) => {
     const menu = menus.find((menu) => menu.id === id);
-    return menu ? menu.id : "Unknown Menu";
+    return menu ? menu.name : "Unknown Menu";
   };
 
   const toggleOpenDropdown = (id) => {
@@ -87,7 +87,7 @@ export default function AdminOrdersItems() {
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   <th scope="col" className="px-4 py-3">
-                    Id
+                    No
                   </th>
                   <th scope="col" className="px-4 py-3">
                     Order Id
@@ -111,15 +111,15 @@ export default function AdminOrdersItems() {
               </thead>
               <tbody>
                 {ordersItems.length > 0 ? (
-                  ordersItems.map((order_item) => (
+                  ordersItems.map((order_item, index) => (
                     <tr key={order_item.id} className="border-b dark:border-gray-700">
                       <th scope="row" className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        {order_item.id}
+                        {index + 1}
                       </th>
                       <th scope="row" className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        {getOrdersId(order_item.order_id)}
+                        {getOrderNumber(order_item.order_id)}
                       </th>
-                      <td className="px-4 py-3">{getMenusId(order_item.menu_id)}</td>
+                      <td className="px-4 py-3">{getMenuName(order_item.menu_id)}</td>
                       <td className="px-4 py-3">{order_item.quantity}</td>
                       <td className="px-4 py-3">{order_item.price}</td>
                       <td className="px-4 py-3">{order_item.subtotal}</td>
