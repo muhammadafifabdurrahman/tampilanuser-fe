@@ -4,7 +4,7 @@ import { getCategories } from "../_services/categories";
 import { menuImageStorage } from "../_api";
 import { FaCartShopping } from "react-icons/fa6";
 import PropTypes from "prop-types";
-import OrderForm from "./form";
+import OrderForm from "./Form";
 
 export default function Menu({ addToCart, removeFromCart }) {
   const [menus, setMenus] = useState([]);
